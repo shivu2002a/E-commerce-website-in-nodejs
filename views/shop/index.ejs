@@ -1,0 +1,43 @@
+<%- include('../includes/head.ejs') %>
+    <link rel="stylesheet" href="/css/product.css">
+    </head>
+
+    <body>
+        <%- include('../includes/navigation.ejs') %>
+            <main>
+                <h1 style="color: blueviolet; padding: 0 0 0 35%;">WELCOME TO THE SHOP</h1>
+                <p>List of some of the products...</p>
+                <h1>My Products</h1>
+                <p>List of all the products...</p>
+                <% if (products.length> 0) { %>
+                    <div class="grid">
+                        <% for (let prod of products ) { %>
+                            <article class="card product-item">
+                                <header class="card__header">
+                                    <h1 class="product__title">
+                                        <%= prod.title %>
+                                    </h1>
+                                </header>
+                                <div class="card__image">
+                                    <img src="<%= prod.imageUrl %>" alt="<%= prod.title %>">
+                                </div>
+                                <div class="card__content">
+                                    <h2 class="product__price">$<%= prod.price%>
+                                    </h2>
+                                    <p class="product__description">
+                                        <%= prod.description%>
+                                    </p>
+                                </div>
+                                <div class="card__actions">
+                                    <button class="btn">Add to Cart</button>
+                                </div>
+                            </article>
+                            <% } %>
+                    </div>
+                    <% } else { %>
+                        <h1>No products as of now</h1>
+                        <% } %>
+            </main>
+    </body>
+
+</html>

@@ -22,9 +22,8 @@
                             <p class="product__description"><%= prod.description%></p>
                         </div>
                         <div class="card__actions">
-                            <form action="/add-to-cart" method="post">
-                                <button class="btn" type="submit">Add to cart</button>
-                            </form>
+                            <a href="/products/<%= prod.id %>" class="btn">Details</a>
+                            <%- include('../includes/add-to-cart.ejs', {product: prod})%>
                         </div>
                     </article>
                 <% } %>

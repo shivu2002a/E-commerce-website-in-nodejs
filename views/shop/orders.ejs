@@ -6,8 +6,24 @@
         <%- include('../includes/navigation.ejs') %>
             <main>
                 <h1 style="color: blueviolet; padding: 0 0 0 35%;">WELCOME TO THE ORDERS' PAGE</h1>
-
-                <h2>Nothing here as of yet</h2>
+                <% if (orders.length <= 0) { %>
+                    <h2>Nothing here as of yet</h2>
+                <% } else { %>
+                    <ul>
+                        <% orders.forEach(order => { %>
+                            <li>
+                                <h1> <%= order.id %> </h1>
+                                <ul>
+                                    <% order.products.forEach(prod => { %>
+                                        <li><%=prod.title %><%= (prod.orderItem.quantity)%></li>
+                                    <% }) %>
+                                </ul>
+                            </li>
+                        <% })%>
+                    </ul>
+                
+                
+                <% } %>
             </main>
     </body>
 </html>

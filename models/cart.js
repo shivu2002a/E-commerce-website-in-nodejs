@@ -1,3 +1,5 @@
+/*
+
 const path = require('path')
 const fs = require('fs')
 
@@ -106,3 +108,19 @@ module.exports = class Cart {
         })
     }
 }
+
+*/
+
+const Sequelize = require('sequelize')
+const sequelize = require('../utils/database')
+
+const Cart = sequelize.define('cart', {
+    id: {
+        type: Sequelize.INTEGER,
+        primaryKey: true,
+        autoIncrement: true,
+        allowNull: false,
+    }
+})
+
+module.exports = Cart

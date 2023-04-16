@@ -10,18 +10,15 @@ const adminController = require('../controllers/admin.js')
 //     //Path should be rel to the loc of file
 //     res.sendFile(path.join(rootDir, 'views', 'add-product.html'))
 // })
-router.get('/add-product', adminController.getAddProduct)
-
+// Implicitly reached by /admin/add-product
 router.get('/products', adminController.getProducts)
 
-// Implicitly reached by /admin/add-product
+router.get('/add-product', adminController.getAddProduct)
 router.post("/add-product", adminController.postAddProduct)
 
 router.get('/edit-product/:productId', adminController.getEditProduct)
-
 router.post('/edit-product', adminController.postEditProduct)
 
 router.post('/delete-product', adminController.postDeleteProduct)
-
 
 module.exports = router

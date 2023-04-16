@@ -9,7 +9,6 @@ const router = express.Router()
 //     res.sendFile(path.join(__dirname,'../', 'views', 'shop.html'))
 // })
 
-//Pug engine
 router.get('/', shopController.getIndex)
 
 router.get('/products', shopController.getProducts)
@@ -26,6 +25,6 @@ router.get('/cart', shopController.getCart)
 
 router.post('/delete-cart-item', shopController.deleteCartItem)
 
-router.get('/checkout', shopController.getCheckout)
+// router.get('/checkout', shopController.getCheckout)
 
 module.exports = router

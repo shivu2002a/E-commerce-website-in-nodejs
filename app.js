@@ -3,15 +3,11 @@
 const express = require('express')
 const bodyparser = require('body-parser')
 const path = require('path')
-const sequelize = require('./utils/database')
+const session = require('express-session')
+const MongoDBStore = require('connect-mongodb-session')(session)
 
-//Models
-const Product = require('./models/product')
+const mongoose = require('mongoose')
 const User = require('./models/user')
-const Cart = require('./models/cart')
-const CartItem = require('./models/cart-item')
-const Order = require('./models/order')
-const OrderItem = require('./models/order-item')
 
 /**
  * 1. Create app
@@ -25,24 +21,28 @@ const OrderItem = require('./models/order-item')
 const app = express()
 app.use(bodyparser.urlencoded({ extended: false }))
 app.use(express.static(path.join(__dirname, 'public')))
-
-//Rendering engine
-// app.set('view engine', 'pug')
-// app.set('views', 'views')
 app.set('view engine', 'ejs')
 
+const MongoStore = new MongoDBStore({
+    uri: 'mongodb+srv://ShopOwner:lXLaEMaZYf7LyKyo@cluster0.8dtrmbc.mongodb.net/shop',
+    collection: 'sessions'
+})
+
+app.use(session(
+    {secret: 'my secret', resave: false, saveUninitialized: false, store: MongoStore}))
 
 const adminRoutes = require('./routes/admin.js')
 const shopRoutes = require('./routes/shop.js')
 const errorController = require('./controllers/error')
+const authRoutes = require('./routes/auth')
 
-//Attach a dummy user
+//Attach a dummy user for now
 app.use((req, res, next) => {
+    if(!req.session.user) return next()
     User
-        .findByPk(1)
-        .then(result => {
-            // console.log('From app.js', result)
-            req.user = result
+        .findById(req.session.user._id)
+        .then(user => {
+            req.user = user
             next()
         })
         .catch(err => console.log(err))
@@ -50,64 +50,27 @@ app.use((req, res, next) => {
 
 app.use('/admin', adminRoutes)
 app.use(shopRoutes)
-app.use(errorController.get404)
+app.use(authRoutes)
 
-
-//MYSQL Query
-/*
-db.execute('Select * from products')
-.then(result => {
-    console.log(result[0])
-})
-.catch(err => {
-    console.log(err)
-})
- */
-
-// app.use((req, res, next) => {
-//     res.status(404).sendFile(path.join(__dirname, 'views', '404.html'))
-// })
-
-Product.belongsTo(User, {
-    constraints: true,
-    onDelete: 'CASCADE'
-})
-User.hasMany(Product)
-User.hasOne(Cart)
-Cart.belongsTo(User)
-
-Cart.belongsToMany(Product, {through: CartItem})
-Product.belongsToMany(Cart, {through: CartItem})
-
-Order.belongsTo(User)
-User.hasMany(Order)
-Order.belongsToMany(Product, {through: OrderItem})
-Product.belongsToMany(Order, {through: OrderItem}) 
-
-
-sequelize
-    .sync(/*{ force: true }*/)
+mongoose
+    .connect('mongodb+srv://ShopOwner:lXLaEMaZYf7LyKyo@cluster0.8dtrmbc.mongodb.net/shop?retryWrites=true&w=majority')
     .then(result => {
-        return User.findByPk(1)
-    })
-    .then(user => {
-        if (!user) {
-            return User.create({ name: 'Nihal', email: 'ng@gmail.com' })
-        }
-        return user
-    })
-    // .then(user => {
-    //     return user.createCart()
-    // })
-    .then(cart => {
-        console.log(cart)
+        User.findOne().then(user => {
+            if(!user) {
+                const user = new User({
+                    name: 'Nihal',
+                    email: 'nihal@g.com',
+                    cart: {
+                        items: []
+                    }
+                })
+                user.save() 
+            }
+        })
         app.listen(3000)
     })
     .catch(err => {
         console.log(err)
     })
 
-// const server = http.createServer(app)
-// server.listen(3000)
-// Above two lines -->
-// app.listen(3000)
+app.use(errorController.get404)

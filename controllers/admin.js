@@ -1,12 +1,13 @@
 
 const Product = require('../models/product')
 
-//View files are seen relative to views folders
+//View files are seen relative to views folder
 exports.getAddProduct = (req, res, next) => {
     res.render('admin/edit-product', {
         pageTitle: 'Add Product',
         path: '/admin/add-product',
-        editing: false
+        editing: false,
+        isAuthenticated: req.session.isLoggedIn
     })
 }
 
@@ -15,32 +16,15 @@ exports.postAddProduct = (req, res, next) => {
     const img = req.body.imageUrl
     const desc = req.body.description
     const price = req.body.price
-    // const prod = new Product(null, title, img, desc, price)
-    // prod
-    // .save()
-    // .then(() => {
-    //     res.redirect('/')
-    // })
-    // .catch(err => console.log(err))
+    const prod = new Product({title: title, price: price, description: desc, imageUrl: img, userId: req.user})
+    prod
+        .save()
+        .then(result => {
+            console.log('Product created')
+            res.redirect('/admin/products')
+        })
+        .catch(err => console.log(err))
 
-    //Using sequelize
-    // Product.create({
-    //     title: title,
-    //     price: price,
-    //     imageUrl: img,
-    //     description: desc,
-    //     userId: req.user.id
-    // })
-    req.user.createProduct({
-        title: title,
-        price: price,
-        imageUrl: img,
-        description: desc
-    })
-    .then(result => {
-        console.log(result)
-        res.redirect('/admin/products')  })
-    .catch(err => console.log(err))
 }
 
 exports.getEditProduct = (req, res, next) => {
@@ -49,20 +33,20 @@ exports.getEditProduct = (req, res, next) => {
         res.redirect('/')
     }
     const productId = req.params.productId
-    // const product = Product.findById(productId, product => {
-    // })    
-    // Product.findByPk(productId).then(product => {
-    req.user.getProducts({where: {id: productId}}).then(products => {
-        if (!products) {
-            return res.redirect('/')
-        }
-        res.render('admin/edit-product', {
-            pageTitle: 'Edit Product',
-            path: '/admin/edit-product',
-            product: products[0],
-            editing: editMode
+    Product.findById(productId)
+        .then(product => {
+            if (!product) {
+                return res.redirect('/')
+            }
+            res.render('admin/edit-product', {
+                pageTitle: 'Edit Product',
+                path: '/admin/edit-product',
+                product: product,
+                editing: editMode,
+                isAuthenticated: req.session.isLoggedIn
+            })
         })
-    })
+        .catch(err => console.log(err))
 }
 
 exports.postEditProduct = (req, res, next) => {
@@ -71,48 +55,46 @@ exports.postEditProduct = (req, res, next) => {
     const price = req.body.price
     const desc = req.body.description
     const imageUrl = req.body.imageUrl
-    // const pupdatedProd = new Product(prodId, title, imageUrl, desc, price)
-    // pupdatedProd.save()
-    Product
-        .findByPk(prodId)
-        .then(product => {
-            product.title = title
-            product.price = price
-            product.imageUrl = imageUrl
-            product.description = desc
-            product.save()
-        }).then(result => {
-            console.log(result)
+
+    Product.findById(prodId).then(product => {
+        product.title = title
+        product.price = price
+        product.description = desc
+        product.imageUrl = imageUrl
+        return product.save()
+    })
+        .then(resu => {
+            console.log('Product updated !!')
             res.redirect('/admin/products')
 
         })
         .catch(err => console.log(err))
     //We redirect before the update is done, so we'll not see the change immediately. So, put tha below line upwards
-    res.redirect('/admin/products')
 }
 
 exports.postDeleteProduct = (req, res, next) => {
     const prodId = req.body.productId
-    Product.findByPk(prodId).then(prod => {
-        return prod.destroy()
-    })
+    Product.findByIdAndRemove(prodId)
         .then(result => {
             console.log('Destroyed')
             res.redirect('/admin/products')
         })
         .catch(err => console.log(err))
-
-    // Product.deleteById(prodId)
 }
 
 exports.getProducts = (req, res, next) => {
-    // Product.findAll()
-    req.user.getProducts()
+    Product
+        .find()
+        // .select('title price -_id')
+        // .populate('userId', 'name')
         .then(products => {
-            res.render('admin/products.ejs', {
+            console.log(products)
+            res.render('admin/products', {
                 products: products,
                 pageTitle: 'Admin Products',
-                path: '/admin/products'
+                path: '/admin/products',
+                isAuthenticated: req.session.session.isLoggedIn
             })
         })
+        .catch(err => console.log(err))
 }

@@ -3,11 +3,13 @@
 const express = require('express')
 const bodyparser = require('body-parser')
 const path = require('path')
+
 const session = require('express-session')
 const MongoDBStore = require('connect-mongodb-session')(session)
-
 const mongoose = require('mongoose')
 const User = require('./models/user')
+const csrf = require('csurf')
+const flash = require('connect-flash')
 
 /**
  * 1. Create app
@@ -30,22 +32,36 @@ const MongoStore = new MongoDBStore({
 
 app.use(session(
     {secret: 'my secret', resave: false, saveUninitialized: false, store: MongoStore}))
+app.use(flash())
 
 const adminRoutes = require('./routes/admin.js')
 const shopRoutes = require('./routes/shop.js')
 const errorController = require('./controllers/error')
 const authRoutes = require('./routes/auth')
+const csurfProtection = csrf()
 
-//Attach a dummy user for now
+app.use(csurfProtection)
 app.use((req, res, next) => {
     if(!req.session.user) return next()
     User
         .findById(req.session.user._id)
         .then(user => {
+            if(!user) next()
             req.user = user
             next()
         })
-        .catch(err => console.log(err))
+        .catch(err =>  {
+            //This is will not do anything. Errors should be thrown outside async (then) block to have them caught by error request handler
+            // throw new Error(err)
+            // This will work
+            next(new Error(err))
+        })
+})
+
+app.use((req, res, next) => {
+    res.locals.isAuthenticated = req.session.isLoggedIn
+    res.locals.csrfToken = req.csrfToken()
+    next()
 })
 
 app.use('/admin', adminRoutes)
@@ -55,18 +71,6 @@ app.use(authRoutes)
 mongoose
     .connect('mongodb+srv://ShopOwner:lXLaEMaZYf7LyKyo@cluster0.8dtrmbc.mongodb.net/shop?retryWrites=true&w=majority')
     .then(result => {
-        User.findOne().then(user => {
-            if(!user) {
-                const user = new User({
-                    name: 'Nihal',
-                    email: 'nihal@g.com',
-                    cart: {
-                        items: []
-                    }
-                })
-                user.save() 
-            }
-        })
         app.listen(3000)
     })
     .catch(err => {
@@ -74,3 +78,8 @@ mongoose
     })
 
 app.use(errorController.get404)
+app.get('/500', errorController.get500)
+app.use((error, req, res, next) => {
+    // res.status(error.httpStatusCode(500).render()
+    res.redirect('/500')
+})

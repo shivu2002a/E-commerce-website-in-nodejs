@@ -3,6 +3,8 @@ const path = require('path')
 const router = express.Router()
 const rootDir = require('../utils/path')
 const adminController = require('../controllers/admin.js')
+const isAuth = require('../middleware/is-auth')
+const { body, query} = require('express-validator')
 
 // router.get('/add-product', (req, res, next) => {
 //     console.log("In add-product middleware")
@@ -11,14 +13,38 @@ const adminController = require('../controllers/admin.js')
 //     res.sendFile(path.join(rootDir, 'views', 'add-product.html'))
 // })
 // Implicitly reached by /admin/add-product
-router.get('/products', adminController.getProducts)
+router.get('/products', isAuth, adminController.getProducts)
 
-router.get('/add-product', adminController.getAddProduct)
-router.post("/add-product", adminController.postAddProduct)
+router.get('/add-product', isAuth, adminController.getAddProduct)
+router.post("/add-product",
+    [isAuth,
+        body('title')
+            .isString()
+            .isLength({ min: 3 })
+            .trim(),
 
-router.get('/edit-product/:productId', adminController.getEditProduct)
-router.post('/edit-product', adminController.postEditProduct)
+        body('price').isFloat({gt: 0}),
 
-router.post('/delete-product', adminController.postDeleteProduct)
+        body('imageUrl').isURL(),
+
+        body('description').trim().isLength({ min: 5, max: 400 })
+    ],
+    adminController.postAddProduct)
+
+router.get('/edit-product/:productId', isAuth, adminController.getEditProduct)
+router.post('/edit-product', [isAuth,
+    body('title')
+        .isString()
+        .isLength({ min: 3 })
+        .trim(),
+
+    body('price').isFloat({gt: 0}),
+
+    body('imageUrl').isURL(),
+
+    body('description').trim().isLength({ min: 5, max: 400 })
+], adminController.postEditProduct)
+
+router.post('/delete-product', isAuth, adminController.postDeleteProduct)
 
 module.exports = router

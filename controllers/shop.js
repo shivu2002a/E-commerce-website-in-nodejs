@@ -6,8 +6,7 @@ exports.getIndex = (req, res, next) => {
         res.render('shop/index.ejs', {
             pageTitle: 'Shop',
             path: '/',
-            products: rows,
-            isAuthenticated: req.session.isLoggedIn
+            products: rows
         })
     })
         .catch(err => {
@@ -20,8 +19,7 @@ exports.getProducts = (req, res, next) => {
         res.render('shop/product-list', {
             products: products,
             pageTitle: 'All Products',
-            path: '/products',
-            isAuthenticated: req.session.isLoggedIn
+            path: '/products'
         })
     })
         .catch(err => console.log(err))
@@ -34,8 +32,7 @@ exports.getProduct = (req, res, next) => {
         res.render('shop/product-detail.ejs', {
             product: product,
             pageTitle: product.title,
-            path: '/product',
-            isAuthenticated: req.session.isLoggedIn
+            path: '/product'
         })
     })
 }
@@ -49,7 +46,7 @@ exports.postOrder = (req, res, next) => {
             })
             const order = new Order({
                 user: {
-                    name: req.user.name,
+                    email: req.user.email,
                     userId: req.user
                 },
                 products: products
@@ -66,13 +63,12 @@ exports.postOrder = (req, res, next) => {
 
 exports.getOrders = (req, res, next) => {
     Order
-        .find({ 'user.userId': req.user._id })
+        .find({ 'user.userId': req.user._id.toString() })
         .then(orders => {
             res.render('shop/orders.ejs', {
                 orders: orders,
                 path: '/orders',
-                pageTitle: 'Orders',
-                isAuthenticated: req.session.isLoggedIn
+                pageTitle: 'Orders'
             })
         })
         .catch(err => console.log(err))
@@ -89,8 +85,7 @@ exports.getCart = (req, res, next) => {
             res.render('shop/cart.ejs', {
                 pageTitle: 'Your Cart',
                 path: '/cart',
-                products: cartProducts,
-                isAuthenticated: req.session.isLoggedIn
+                products: cartProducts
             })
         })
         .catch(err => console.log(err))
@@ -125,7 +120,6 @@ exports.deleteCartItem = (req, res, next) => {
 exports.getCheckout = (req, res, next) => {
     res.render('/shop/checkout.ejs', {
         pageTitle: 'Checkout',
-        path: '/checkout',
-        isAuthenticated: req.session.isLoggedIn
+        path: '/checkout'
     })
 }

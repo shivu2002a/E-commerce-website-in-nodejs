@@ -112,3 +112,19 @@ main {
   background-color: #00695c;
   color: white;
 }
+
+
+.user-message {
+  margin: auto;
+  width: 90%;
+  border: 1px solid rgb(147, 72, 217);
+  background: rgb(131, 131, 213);
+  border-radius: 3px;
+  padding: 1rem;
+  text-align: center;
+}
+
+.user-message--error {
+  border-color: red;
+  background: red;
+}

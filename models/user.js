@@ -2,14 +2,16 @@ const mongoose = require('mongoose')
 const Schema = mongoose.Schema
 
 const userSchema = new Schema({
-    name: {
-        type: String,
-        requires: true
-    },
     email: {
         type: String,
         requires: true
     },
+    password: {
+        type: String,
+        requires: true
+    },
+    resetToken: String,
+    resetTokenExpiration: Date, 
     cart: {
         items: [{ 
             productId: { type: Schema.Types.ObjectId, required: true, ref: 'Product' }, 

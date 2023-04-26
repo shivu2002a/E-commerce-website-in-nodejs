@@ -1,3 +1,18 @@
-h4 a:hover {
-    color: blueviolet;
+.order-items {
+    padding: 1em 1em;
+    border: 2px solid green;
+    margin: 5px 0;
+    max-width: 40%;
+}
+
+h3 {
+    display: inline;
+    text-decoration: underline;
+}
+
+.dterm {
+    font-size: large;
+    color: green;
+    font-weight: bold;
+    display: inline;
 }

@@ -15,8 +15,6 @@ router.get('/cart', isAuth, shopController.getCart)
 
 router.post('/delete-cart-item',isAuth, shopController.deleteCartItem)
 
-// router.post('/create-order',isAuth, shopController.postOrder)
-
 router.get('/orders',isAuth, shopController.getOrders)
 
 router.get('/orders/:orderId', isAuth, shopController.getInvoice)

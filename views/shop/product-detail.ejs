@@ -5,10 +5,10 @@
 <body>
     <%- include('../includes/navigation.ejs') %>
         <main class="centered">
-            <h1 style="color: blueviolet; padding: 0 0 0 35%;"><%=product.title%></h1>
+            <h1 style="color: blueviolet;"><%= product.title %></h1>
             <hr>
-            <div>
-                <img src="<%=product.imageUrl%>" alt="Product image">
+            <div class="card__image">
+                <img src="<%= product.imageUrl %>"alt="<%= product.title %>">
             </div>
             <h5><%= product.price%></h5>
             <p><%= product.description %></p>

@@ -22,7 +22,6 @@ exports.postAddProduct = (req, res, next) => {
     const desc = req.body.description
     const price = req.body.price
     const errors = validationResult(req)
-    console.log(img)
     if (!img) {
         return res.status(422).render('admin/edit-product', {
             pageTitle: 'Add Product',
@@ -50,7 +49,6 @@ exports.postAddProduct = (req, res, next) => {
     prod
         .save()
         .then(result => {
-            console.log('Product created')
             res.redirect('/admin/products')
         })
         .catch(err => {
@@ -94,7 +92,6 @@ exports.postEditProduct = (req, res, next) => {
     const desc = req.body.description
     const image = req.file
     const errors = validationResult(req)
-    // console.log(req.user)
 
     if (!errors.isEmpty()) {
         return res.status(422).render('admin/edit-product', {
@@ -122,7 +119,6 @@ exports.postEditProduct = (req, res, next) => {
         return product
             .save()
             .then(resu => {
-                // console.log('Product updated !!')
                 res.redirect('/admin/products')
 
             })
@@ -151,10 +147,7 @@ exports.postDeleteProduct = (req, res, next) => {
 exports.getProducts = (req, res, next) => {
     Product
         .find({ userId: req.user._id })
-        // .select('title price -_id')
-        // .populate('userId', 'name')
         .then(products => {
-            // console.log(products)
             res.render('admin/products', {
                 products: products,
                 pageTitle: 'Admin Products',

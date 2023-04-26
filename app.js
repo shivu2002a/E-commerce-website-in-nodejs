@@ -10,6 +10,7 @@ const mongoose = require('mongoose')
 const User = require('./models/user')
 const csrf = require('csurf')
 const flash = require('connect-flash')
+const multer = require('multer')
 
 /**
  * 1. Create app
@@ -23,7 +24,25 @@ const flash = require('connect-flash')
 const app = express()
 app.use(bodyparser.urlencoded({ extended: false }))
 app.use(express.static(path.join(__dirname, 'public')))
+app.use('/images', express.static(path.join(__dirname, 'images')))
 app.set('view engine', 'ejs')
+
+// File storage
+const fileStorage = multer.diskStorage({
+    destination: (req, file, cb) => {
+        cb(null, 'images')
+    },
+    filename: (req, file, cb) => {
+        cb(null, Date.now() + '-' + file.originalname)
+    }
+})
+const imageFileFilter = (req, file, cb) => {
+    if(file.mimetype === 'image/png' || file.mimetype === 'image/jpg' || file.mimetype === 'image/jpeg')
+        cb(null, true)
+    else 
+        cb(null, false)
+}
+app.use(multer({storage: fileStorage, fileFilter: imageFileFilter}).single('image'))
 
 const MongoStore = new MongoDBStore({
     uri: 'mongodb+srv://ShopOwner:lXLaEMaZYf7LyKyo@cluster0.8dtrmbc.mongodb.net/shop',
@@ -77,9 +96,9 @@ mongoose
         console.log(err)
     })
 
+app.use('/500', errorController.get500)
 app.use(errorController.get404)
-app.get('/500', errorController.get500)
-app.use((error, req, res, next) => {
-    // res.status(error.httpStatusCode(500).render()
-    res.redirect('/500')
-})
+// app.use((error, req, res, next) => {
+//     // res.status(error.httpStatusCode(500).render()
+//     res.redirect('/500')
+// })

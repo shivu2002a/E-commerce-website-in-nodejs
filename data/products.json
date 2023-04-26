@@ -1,0 +1,16 @@
+[
+    {
+        "id": "12345",
+        "title": "Grapes of Wrath",
+        "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/a/ad/The_Grapes_of_Wrath_%281939_1st_ed_cover%29.jpg",
+        "description": "A novel written by John Stienbeck that celebrates the perseverance of human spirit.",
+        "price": "20"
+    },
+    {
+        "title": "Rebecca",
+        "imageUrl": "https://m.media-amazon.com/images/W/IMAGERENDERING_521856-T1/images/I/51BQ+Du5QlS._SX316_BO1,204,203,200_.jpg",
+        "description": "A thriller mystery novel",
+        "price": "20",
+        "id": "0.2622393369821474"
+    }
+]

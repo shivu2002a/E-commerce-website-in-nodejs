@@ -19,7 +19,7 @@
                                     </h1>
                                 </header>
                                 <div class="card__image">
-                                    <img src="<%= prod.imageUrl %>" alt="<%= prod.title %>">
+                                    <img src="/<%= prod.imageUrl %>" alt="<%= prod.title %>">
                                 </div>
                                 <div class="card__content">
                                     <h2 class="product__price">$<%= prod.price%>
@@ -31,11 +31,16 @@
                                 <div class="card__actions">
                                     <button class="btn"> <a href="/admin/edit-product/<%=prod._id%>?edit=true">Edit
                                             product</a></button>
-                                    <form action="/admin/delete-product" method="post">
+                                    <!-- <form action="/admin/delete-product" method="post">
                                         <input type="hidden" name="_csrf" value="<%=csrfToken%>">
                                         <input type="hidden" name="productId" id="id" value="<%=prod._id%>">
                                         <button class="btn" type="submit">Delete product</button>
-                                    </form>
+                                    </form> -->
+                                    
+                                    <!-- Async -->
+                                    <input type="hidden" name="_csrf" value="<%=csrfToken%>">
+                                    <input type="hidden" name="productId" id="id" value="<%=prod._id%>">
+                                    <button class="btn" type="button" onclick="deleteProduct(this)">Delete product</button>
                                 </div>
                             </article>
                             <% } %>
@@ -45,5 +50,5 @@
                         <% } %>
             </main>
     </body>
-
     </html>
+    <script src="/js/admin.js"></script>

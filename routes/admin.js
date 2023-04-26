@@ -25,7 +25,7 @@ router.post("/add-product",
 
         body('price').isFloat({gt: 0}),
 
-        body('imageUrl').isURL(),
+        // body('imageUrl').isURL(),
 
         body('description').trim().isLength({ min: 5, max: 400 })
     ],
@@ -40,11 +40,14 @@ router.post('/edit-product', [isAuth,
 
     body('price').isFloat({gt: 0}),
 
-    body('imageUrl').isURL(),
+    // body('imageUrl').isURL(),
 
     body('description').trim().isLength({ min: 5, max: 400 })
 ], adminController.postEditProduct)
 
-router.post('/delete-product', isAuth, adminController.postDeleteProduct)
+// router.post('/delete-product', isAuth, adminController.postDeleteProduct)
+
+router.delete('/delete-product/:productId', isAuth, adminController.deleteProduct)
+
 
 module.exports = router

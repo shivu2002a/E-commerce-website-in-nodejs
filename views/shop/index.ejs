@@ -5,10 +5,10 @@
     <body>
         <%- include('../includes/navigation.ejs') %>
             <main>
-                <h1 style="color: blueviolet; padding: 0 0 0 35%;">WELCOME TO THE SHOP</h1>
+                <!-- <h1 style="color: blueviolet; padding: 0 0 0 35%;">WELCOME TO THE SHOP</h1>
                 <p>List of some of the products...</p>
                 <h1>My Products</h1>
-                <p>List of all the products...</p>
+                <p>List of all the products...</p> -->
                 <% if (products.length> 0) { %>
                     <div class="grid">
                         <% for (let product of products ) { %>
@@ -37,6 +37,14 @@
                             </article>
                             <% } %>
                     </div>
+                    <%- include('../includes/pagination.ejs', {
+                        currentPage: currentPage,
+                        hasPreviousPage: hasPreviousPage,
+                        previousPage: previousPage,
+                        nextPage: nextPage,
+                        lastPage: lastPage,
+                        hasNextPage: hasNextPage
+                    })%>
                     <% } else { %>
                         <h1>No products as of now</h1>
                         <% } %>

@@ -1,0 +1,47 @@
+<%- include('../includes/head.ejs') %>
+    <link rel="stylesheet" href="/css/product.css">
+    <link rel="stylesheet" href="/css/forms.css">
+    </head>
+
+    <body>
+        <%- include('../includes/navigation.ejs') %>
+            <main>
+                <div class="grid">
+                    <% for (let prod of products ){ %>
+                        <article class="card product-item">
+                            <header class="card__header">
+                                <h1 class="product__title">
+                                    <%= prod.name %>
+                                </h1>
+                            </header>
+                            <div class="card__content">
+                                <h2 class="product__price">$<%= prod.price%> </h2>
+                                <p class="product__description">
+                                    Quantity: <%= prod.quantity%>
+                                </p>
+                            </div>
+
+                        </article>
+                        <% } %>
+                </div>
+
+                <div class="centered" style="padding: 8px 0 ;">
+                    <h2>Total price : $ <%= totalPrice%></h2>
+                </div>
+            </main>
+            <div class="centered">
+                <button id="order-btn" class="btn">Order</button>
+                <script src="https://js.stripe.com/v3/"></script>
+                <script>
+                    var stripe = Stripe('pk_test_51N0lAdSJln4lrBiNLXBdffzDpTEPsuclGMw20o08eqo9yuJqlzA55j1yYAwpgnvpXSzvbCqEfvXiEJBX5S3w8NMo001qBiTn9N');
+                    var orderBtn = document.getElementById('order-btn')
+                    orderBtn.addEventListener('click', () => {
+                        stripe.redirectToCheckout({
+                            sessionId: '<%= sessionId %>'
+                        })
+                    })
+                </script>
+            </div>
+    </body>
+
+    </html>

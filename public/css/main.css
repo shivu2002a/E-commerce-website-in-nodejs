@@ -146,3 +146,26 @@ main {
   background: #00695c;
   color: white;
 }
+
+.form-button button  {
+  background: none;
+  color: inherit;
+  border: none;
+  padding: 0;
+  font: inherit;
+  cursor: pointer;
+  outline: inherit;
+  color: white;
+}
+
+.main-header__item .form-button button:hover {
+  color: #ffeb3b;
+}
+
+.card__actions .btn a {
+  color: #00695c;
+}
+
+.card__actions .btn a:hover {
+  color: white;
+}

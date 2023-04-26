@@ -5,7 +5,7 @@
 
     <body>
         <%- include('../includes/navigation.ejs') %>
-            <h1 style="color: blueviolet; padding: 0 0 0 35%;">WELCOME TO THE CART</h1>
+            <!-- <h1 style="color: blueviolet; padding: 0 0 0 35%;">WELCOME TO THE CART</h1> -->
             <main>
                 <% if (products.length > 0) { %>
                     <div class="grid">
@@ -30,7 +30,9 @@
                                     <form action="/delete-cart-item" method="post">
                                         <input type="hidden" name="_csrf" value="<%=csrfToken%>">
                                         <input type="hidden" name="productId" value="<%=prod.productId._id%>">
-                                        <button type="submit" class="btn">Delete</button>
+                                        <div class="centered" style="padding: 5px 0;">
+                                            <button type="submit" class="btn">Delete</button>
+                                        </div>
                                     </form>
                                 </div>
 

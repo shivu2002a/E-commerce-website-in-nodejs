@@ -66,7 +66,6 @@ exports.getProducts = (req, res, next) => {
 exports.getProduct = (req, res, next) => {
     const id = req.params.productId
     Product.findById(id).then(product => {
-        console.log(product)
         res.render('shop/product-detail.ejs', {
             product: product,
             pageTitle: product.title,
@@ -161,18 +160,8 @@ exports.getCheckout = (req, res, next) => {
     req.user
         .populate('cart.items.productId')
         .then(user => {
-            // console.log(user.cart.items)
             cartProducts = user.cart.items
             cartProducts.forEach(p => totalPrice += p.quantity * p.productId.price)
-            // cartProducts = cartProducts.map(p => {
-            //     return {
-            //         name: p.productId.title,
-            //         description: p.productId.description,
-            //         price: p.productId.price * 100,
-            //         currency: 'usd',
-            //         quantity: p.quantity
-            //     }
-            // })
             let line_items = []
             cartProducts.forEach(p => {
                 const prod = {
@@ -189,16 +178,6 @@ exports.getCheckout = (req, res, next) => {
             })
             return stripe.checkout.sessions.create({
                 payment_method_types: ['card'],
-                // line_items: [{
-                //     price_data: {
-                //         currency: 'usd',
-                //         product_data: {
-                //             name: cartProducts[0].name
-                //         },
-                //         unit_amount: cartProducts[0].price,
-                //     },
-                //     quantity: cartProducts[0].quantity,
-                // }],
                 line_items: line_items,
                 mode: 'payment',
                 success_url: req.protocol + '://' + req.get('host') + '/checkout/success',

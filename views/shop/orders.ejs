@@ -6,24 +6,31 @@
     <body>
         <%- include('../includes/navigation.ejs') %>
             <main>
-                <h1 style="color: blueviolet; padding: 0 0 0 35%;">WELCOME TO THE ORDERS' PAGE</h1>
+                <!-- <h1 style="color: blueviolet; padding: 0 0 0 35%;">WELCOME TO THE ORDERS' PAGE</h1> -->
                 <% if (orders.length <= 0) { %>
                     <h2>Nothing here as of yet</h2>
                 <% } else { %>
-                    <ul>
+                    <dl>
                         <% orders.forEach(order => { %>
-                            <li>
-                                <ul>
-                                    <h4>Order ID:  <%= order._id %>   <a href="/orders/<%=order._id%>"> - Invoice</a> </h4>
+                            <div class="order-items" id="order-items">
+                                <dt> <div class="dterm"> Order ID:</div> <%= order._id %> - <a href="/orders/<%=order._id%>"><h3>Invoice</h3></a> </dt>
+                                <div class="order-details">
                                     <% order.products.forEach(prod => { %>
-                                        <li><%=prod.product.title %> (<%= (prod.quantity)%>)</li>
+                                        <div class="dterm"> Order Details:</div> 
+                                        <dd>Product: <%=prod.product.title %>, Quantity: <%= (prod.quantity)%></dd>
                                     <% }) %>
-                                </ul>
-                            </li>
+                                </div>
+                                <!-- <li>
+                                    <ul>
+                                        <h4>Order ID:  <%= order._id %>   <a href="/orders/<%=order._id%>"> - Invoice</a> </h4>
+                                        <% order.products.forEach(prod => { %>
+                                            <li><%=prod.product.title %> (<%= (prod.quantity)%>)</li>
+                                        <% }) %>
+                                    </ul>
+                                </li> -->
+                            </div>       
                         <% })%>
-                    </ul>
-                
-                
+                    </dl>
                 <% } %>
             </main>
     </body>

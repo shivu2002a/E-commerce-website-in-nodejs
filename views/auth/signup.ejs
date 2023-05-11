@@ -8,14 +8,14 @@
         <%- include("../includes/navigation.ejs") %>
             <form class="login-form" action="/signup" method="POST">
                 <input type="hidden" name="_csrf" value="<%=csrfToken%>">
-                <!-- <% if( errorMessage ) { %> -->
+                <% if( errorMessage ) { %>
                 <div class="user-message user-message--error">
                     <%=errorMessage%>
                 </div>
-                <!-- <% } %>   -->
-                <!-- <% if(errorMessage.length > 1) { %> -->
-                <!-- <div class="user-message user-message--error"> <%=errorMessage%></div>   -->
-                <!-- <% } %>  -->
+                <% } %>  
+                <% if(errorMessage && errorMessage.length > 1) { %>
+                <div class="user-message user-message--error"> <%=errorMessage%></div>  
+                <% } %> 
                 <div class="form-control">
                     <label for="email">E-mail</label>
                     <input 

@@ -88,7 +88,7 @@ app.use(shopRoutes)
 app.use(authRoutes)
 
 mongoose
-    .connect('mongodb+srv://ShopOwner:lXLaEMaZYf7LyKyo@cluster0.8dtrmbc.mongodb.net/shop?retryWrites=true&w=majority')
+    .connect(`${process.env.MONGO_URL}`)
     .then(result => {
         app.listen(process.env.Port || 3000)
     })

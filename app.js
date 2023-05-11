@@ -45,7 +45,7 @@ const imageFileFilter = (req, file, cb) => {
 app.use(multer({storage: fileStorage, fileFilter: imageFileFilter}).single('image'))
 
 const MongoStore = new MongoDBStore({
-    uri: 'mongodb+srv://ShopOwner:lXLaEMaZYf7LyKyo@cluster0.8dtrmbc.mongodb.net/shop',
+    uri: `${process.env.MONGO_URL}`,
     collection: 'sessions'
 })
 
@@ -90,7 +90,7 @@ app.use(authRoutes)
 mongoose
     .connect('mongodb+srv://ShopOwner:lXLaEMaZYf7LyKyo@cluster0.8dtrmbc.mongodb.net/shop?retryWrites=true&w=majority')
     .then(result => {
-        app.listen(3000)
+        app.listen(process.env.Port || 3000)
     })
     .catch(err => {
         console.log(err)

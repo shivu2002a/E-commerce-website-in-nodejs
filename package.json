@@ -1,12 +1,15 @@
 {
-  "name": "Express",
+  "name": "ProdStudio",
   "version": "1.0.0",
-  "description": "Npm scripts and debugging",
+  "description": "Ecommerce website ",
   "main": "app.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "nodemon app.js",
     "start-server": "nodemon app.js"
+  },
+  "engine": {
+    "node":"14.20.1"
   },
   "author": "Shivanagouda S A",
   "license": "ISC",
